@@ -1,0 +1,15 @@
+{
+    "name": "softwar07/mini-framework-mvc-php",
+    "autoload": {
+        "psr-4" : {
+            "app\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sauerlock",
+            "email": "joaosauer@outlook.com"
+        }
+    ],
+    "require": {}
+}
