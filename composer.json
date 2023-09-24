@@ -11,5 +11,7 @@
             "email": "joaosauer@outlook.com"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^2.15"
+    }
 }

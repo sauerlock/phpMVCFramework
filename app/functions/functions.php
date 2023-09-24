@@ -6,5 +6,4 @@ function dd ($params = [], $die = true)
     echo '</pre>';
 }
 
-if ($die) die();
 ?>

@@ -22,7 +22,6 @@ class RouterCore
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
         $uri = $_SERVER['REQUEST_URI'];
-
         $explodeURI = explode('/', $uri);
 
         $uri = $this->normalizeURI($explodeURI);
@@ -34,9 +33,8 @@ class RouterCore
         $this->uri = implode('/', $this->normalizeURI($uri));
         if (DEBUG_URI) {
             dd($this->uri);
-
             // Uma das maneiras de tratar a url
-            // dd(str_replace('/mini-framework-mvc-php/', '', $uri));
+            //dd(str_replace('/mini-framework-mvc-php/', '', $uri));
         }
     }
 
@@ -46,6 +44,7 @@ class RouterCore
             'router' => $router,
             'callback' => $callback
         ];
+        $this->execute();
     }
 
     private function execute()
@@ -64,17 +63,43 @@ class RouterCore
     {
         foreach ($this->getArray as $get) {
             $route = substr($get['router'], 1);
-            if (substr($route, -1) == '/'){
+            
+            if (substr($route, -1) == '/') {
                 $route = substr($route, 0, -1);
-                dd($route);
-            } 
+            }
+            dd($route);
             if ($route == $this->uri) {
-                if(is_callable($get['callback'])) {
+                if (is_callable($get['callback'])) {
                     $get['callback']();
                     break;
+                } else {
+                    $this->executeController($get['callback']);
                 }
             }
         }
+    }
+
+    private function executeController($get)
+    {
+        $explode = explode('@', $get);
+        $controller = 'app\\controller\\' . $explode[0];
+        // dd($controller);
+        dd($controller);
+        if (!isset($explode[0]) || !isset($explode[1])) {
+            (new \app\controller\MessageController)->throwError('Dados Invalidos', 'Controller or Method not Found ' . $get, 404);
+            return;
+        }
+
+        if(!class_exists($controller)) {
+            (new \app\controller\MessageController)->throwError('Dados Invalidos', 'Controller not Found ' . $get, 404);
+            return;
+        }
+
+        if(!method_exists($controller, $explode[1])) {
+            (new \app\controller\MessageController) ->throwError('Dados Invalidos', 'Method not Found ' . $get, 404);
+            return;
+        }
+
     }
 
     private function normalizeURI($array)
